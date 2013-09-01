@@ -10,30 +10,28 @@ app.get('/', function (req, res) {
 });
 
 io.sockets.on('connection', function (socket) {
-  socket.emit('news', { hello: 'world' });
 
-  socket.on('my other event', function (data) {
-    console.log(data);
-  });
+  //socket.on('my other event', function (data) {
+  //  console.log(data);
+  //});
 
   socket.on('client_data', function(data){
 	process.stdout.write('the data: ' + data.authToken + ' - ' + data.method + ' ');
+	
+	// Save and remove the rest path from the data obj
+	var restPath = data.algorithmPath;
+	delete data.algorithmPath;
 
 	// Call Algorithms.io REST API
 	var querystring = require('querystring');
-	var postData = querystring.stringify({
-				  authToken: data.authToken,
-				  method: data.method,
-				  outputType: data.outputType,
-				  train: data.train,
-				  test: data.test,
-				  dependentVariable: data.dependentVariable
-				});
 	
+	// Put all passed in variables into the post data
+	var postData = querystring.stringify(data);
+				
 	var options = {
   		host: 'api.algorithms.io',
   		port: 80,
-  		path: data.algorithmPath,
+  		path: restPath,
   		method: 'POST',
   		headers: {
 			'Content-Type': 'application/x-www-form-urlencoded',

@@ -5,8 +5,17 @@ var app = require('express')()
 
 server.listen(80);
 
+// Accessing via HTTP
 app.get('/', function (req, res) {
   res.sendfile(__dirname + '/index.html');
+});
+// Sample code for an endpoint
+app.get('/sample', function (req, res) {
+  res.sendfile(__dirname + '/getRecommendation.html');
+});
+// Sample code for an endpoint - Kiwi
+app.get('/kiwi', function (req, res) {
+  res.sendfile(__dirname + '/kiwi.html');
 });
 
 io.sockets.on('connection', function (socket) {
